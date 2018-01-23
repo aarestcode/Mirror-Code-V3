@@ -234,14 +234,14 @@ int ParseCommand(port_t port){
 	// CHANGE VARIABLE HV
 	else if (command==170){
 		int status = SetVoltage(data);
-		error = SendFeedback(port,command,0,status);
+		error = SendFeedback(port,command,data,status);
 		if(error) return error;
 	}
 	
 	// CHANGE BIAS HV
 	else if (command==171){
 		int status = SetBias(data);
-		error = SendFeedback(port,command,0,status);
+		error = SendFeedback(port,command,data,status);
 		if(error) return error;
 	}
 	
@@ -481,7 +481,6 @@ int ParseCommand(port_t port){
 	else if (command==214){
 		int status = OK;
 		if (Mode == MODE_ELECTRODE) status = SetMode(MODE_NOMINAL);
-		else PreviousMode = MODE_NOMINAL;
 		resetWatchdogTimer();
 		error = SendFeedback(port,command,0,status);
 		if(error) return error;

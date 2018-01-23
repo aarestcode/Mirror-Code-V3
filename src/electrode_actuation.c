@@ -17,6 +17,7 @@
 #include "i2c.h"
 #include "power.h"
 #include "memory.h"
+#include "watchdog.h"
 #include <math.h>
 #define __DELAY_BACKWARD_COMPATIBLE__ //To use variables in delay functions
 #include <util/delay.h> //Delay functions
@@ -144,7 +145,7 @@ int StartElectrodeActuation(void){
 	int N_increments = floor((double)(0x3fff - REGISTER[memory_HV_BIAS])/(double)REGISTER[memory_HV_STEP]);
 	for(int II=0; II<N_increments; II++){
 		
-		volt = 0x3fff - II*REGISTER[memory_HV_STEP];
+		volt = 0x3f00 - II*(uint16_t)REGISTER[memory_HV_STEP];
 		
 		error = SetBias(volt);
 		if(error) return error;
@@ -153,6 +154,7 @@ int StartElectrodeActuation(void){
 		if(error) return error;
 		
 		_delay_ms(REGISTER[memory_HV_TIMER]);
+		resetWatchdogTimer();
 		
 		for (int ch=0; ch < N_electrodes; ch++){
 			error = ChannelOn(ch);  // Start charging channel
@@ -161,6 +163,7 @@ int StartElectrodeActuation(void){
 			
 			error = ChannelOff(ch);  // Start charging channel
 		}
+		resetWatchdogTimer();
 		if(error) return error;
 	}
 	

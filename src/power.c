@@ -224,6 +224,8 @@ int ActivateHV(void){
 	// 1) Enable 5V
 	EnableSV(SUPPLY_VOLTAGE_FIVE,true);
 	
+	_delay_ms(100);
+	
 	// 2) Command variable HV to 0V
 	error = SetVoltage(0x3f00);
 	if(error) return error;	
@@ -231,16 +233,15 @@ int ActivateHV(void){
 	// 3) Command ground to 0V
 	error = SetBias(0x3f00);
 	if(error) return error;
-	
+		
 	// 4) Enable 12V
 	EnableSV(SUPPLY_VOLTAGE_TWELVE,true);
 	
 	// 5) Enable CL3
 	EnableCL(CURRENT_LIMITER_3,true);
-	_delay_ms(1000);
 	
 	// 6) Check HV_VOLTAGE
-	_delay_ms(1500);
+	//_delay_ms(1500);
 	/*if ( IsFeedbackVOOB(FEEDBACK_VOLTAGE_HV_VOLTAGE, TWO_FIVE_V, 50) ){
 		DeactivateHV();
 		
@@ -287,9 +288,9 @@ int DeactivateHV(void){
 	
 
 	// 1) Command variable HV to BIAS
-	int error = SetVoltage(REGISTER[memory_HV_BIAS]);
-	if(error) return error;
-	_delay_ms(REGISTER[memory_HV_TIMER]);
+	//int error = SetVoltage(REGISTER[memory_HV_BIAS]);
+	//if(error) return error;
+	//_delay_ms(REGISTER[memory_HV_TIMER]);
 	
 	// 2) Disable 12V
 	EnableSV(SUPPLY_VOLTAGE_TWELVE,false);
