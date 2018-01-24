@@ -231,14 +231,11 @@ int ActuateElectrode(int channel){
 	if(status) return status;
 	
 	// 4. Charge electrode
-	_delay_ms((REGISTER[memory_address] >> 24) & 0xff);
+	_delay_ms((REGISTER[memory_address] >> 16) & 0xff);
 	
 	// 5. Turn channel off
 	status = ChannelOff(channel);
 	if(status) return status;
-	
-	// 6. Update timer in electrode data
-	REGISTER[memory_address] = ((REGISTER[memory_address] & 0xff0000) << 8) | (REGISTER[memory_address] & 0xffffff);
 	
 	return OK;
 }
