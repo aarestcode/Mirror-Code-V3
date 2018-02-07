@@ -37,7 +37,7 @@ int POWER_INIT(void){
 	REGISTER[memory_CURRENT_FUNCTION] = (REGISTER[memory_CURRENT_FUNCTION]<<8) + POWER_INIT_Code;
 	
 		
-	//TODO: Delte (in register)
+	//TODO: Delete (in register)
 	REGISTER[memory_HV_TOL_V] = 50; // 0.15V tolerance over 3.3V max
 
 	// Set Supply voltage enable as output
@@ -52,9 +52,9 @@ int POWER_INIT(void){
 	DDR_CL_E |= ((1<<CL1_E) | (1<<CL2_E) | (1<<CL3_E));
 	
 	// Disable Current Limiters
-	EnableCL(CL1_E,false);
-	EnableCL(CL2_E,false);
-	EnableCL(CL3_E,false);
+	EnableCL(CURRENT_LIMITER_1,false);
+	EnableCL(CURRENT_LIMITER_2,false);
+	EnableCL(CURRENT_LIMITER_3,false);
 		
 	// Set Current Limiters Fault as inputs
 	DDR_CL_F1 &= ~((1<<CL2_F) | (1<<CL3_F));
@@ -181,7 +181,7 @@ void EnableCL(current_limiter_t CL_index, bool state){
 	if(state){
 		if (CL_index == CURRENT_LIMITER_1) PORT_CL_E &= ~(1<<CL1_E);
 		if (CL_index == CURRENT_LIMITER_2) PORT_CL_E &= ~(1<<CL2_E);
-		if (CL_index == CURRENT_LIMITER_3) PORT_CL_E &= ~(1<<CL2_E);
+		if (CL_index == CURRENT_LIMITER_3) PORT_CL_E &= ~(1<<CL3_E);
 	}
 	else{
 		if (CL_index == CURRENT_LIMITER_1) PORT_CL_E |= (1<<CL1_E);
@@ -202,9 +202,9 @@ void EnableCL(current_limiter_t CL_index, bool state){
 bool IsCLFault(current_limiter_t CL_index){
 	REGISTER[memory_CURRENT_FUNCTION] = (REGISTER[memory_CURRENT_FUNCTION]<<8) + IsCLFault_Code;
 	
-	if (CL_index == CURRENT_LIMITER_1) return (PIN_CL_F2 & (1<<CL1_F));
-	if (CL_index == CURRENT_LIMITER_2) return (PIN_CL_F1 & (1<<CL2_F));
-	if (CL_index == CURRENT_LIMITER_3) return (PIN_CL_F1 & (1<<CL3_F));
+	if (CL_index == CURRENT_LIMITER_1) return !(PIN_CL_F2 & (1<<CL1_F));
+	if (CL_index == CURRENT_LIMITER_2) return !(PIN_CL_F1 & (1<<CL2_F));
+	if (CL_index == CURRENT_LIMITER_3) return !(PIN_CL_F1 & (1<<CL3_F));
 	else return false;
 }
 
