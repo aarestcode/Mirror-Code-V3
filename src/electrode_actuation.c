@@ -182,7 +182,7 @@ int StartElectrodeActuation(void){
 		
 		error = ChannelOff(ch);  // Start charging channel
 		
-		REGISTER[memory_ELECTRODE1 + ch] == 0 // Deactivate electrode
+		REGISTER[memory_ELECTRODE1 + ch] == (0x0A<<16) + REGISTER[memory_HV_BIAS] // Set electrode to 0V for 10ms
 	}
 	if(error) return error;
 	
